@@ -47,7 +47,7 @@ class Register extends Component {
 
   changeForm(){
     const { toggleLogInForm } = this.props;
-    toggleLogInForm(true);
+    toggleLogInForm(false);
   }
 
   render() {

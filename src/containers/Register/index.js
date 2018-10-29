@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { appActions } from '../../redux/actions';
 
 class Register extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       email: '',
@@ -12,19 +12,19 @@ class Register extends Component {
       confirmPassword: '',
       name: '',
       lastName: '',
-      type: 0,
-    }
+      type: 0
+    };
     this.handleInputs = this.handleInputs.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.changeForm = this.changeForm.bind(this);
   }
 
-  handleInputs(e){
+  handleInputs(e) {
     const { name, value } = e.target;
     this.setState({ [name]: value });
   }
 
-  handleSubmit(e){
+  handleSubmit(e) {
     e.preventDefault();
     const { createAccount } = this.props;
     const {
@@ -33,42 +33,44 @@ class Register extends Component {
       confirmPassword,
       name,
       lastName,
-      type,
-    } = this.state
+      type
+    } = this.state;
     createAccount({
       email,
       password,
       confirmPassword,
       name,
       lastName,
-      type,
+      type
     });
   }
 
-  changeForm(){
+  changeForm() {
     const { toggleLogInForm } = this.props;
     toggleLogInForm(false);
   }
 
   render() {
-
     const {
       email,
       password,
       confirmPassword,
       name,
       lastName,
-      type,
-    } = this.state
+      type
+    } = this.state;
 
     return (
-      <div className='container-fluid'>
-        <div className='d-flex align-items-center justify-content-center' style={{height: '100vh'}}>
-          <div className='card'>
-            <div className='card-header'>
+      <div className="container-fluid">
+        <div
+          className="d-flex align-items-center justify-content-center"
+          style={{ height: '100vh' }}
+        >
+          <div className="card">
+            <div className="card-header">
               <h4>Crear Cuenta</h4>
             </div>
-            <div className='card-body'>
+            <div className="card-body">
               <form onSubmit={this.handleSubmit}>
                 <div className="form-group">
                   <label htmlFor="exampleInputEmail1">Nombre</label>
@@ -119,7 +121,9 @@ class Register extends Component {
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="exampleInputPassword1">Confirme Contraseña</label>
+                  <label htmlFor="exampleInputPassword1">
+                    Confirme Contraseña
+                  </label>
                   <input
                     type="password"
                     className="form-control"
@@ -132,7 +136,13 @@ class Register extends Component {
                 </div>
                 <div className="form-group">
                   <label htmlFor="inputState">Tipo de Usuario</label>
-                  <select id="inputState" className="form-control" value={type} name="type" onChange={this.handleInputs}>
+                  <select
+                    id="inputState"
+                    className="form-control"
+                    value={type}
+                    name="type"
+                    onChange={this.handleInputs}
+                  >
                     <option value="0">Seleccionar...</option>
                     <option value="1">Administrador</option>
                     <option value="2">Encargado de Laboratorio</option>
@@ -141,34 +151,43 @@ class Register extends Component {
                     <option value="5">Alumno</option>
                   </select>
                 </div>
-                <div className='d-flex justify-content-around'>
-                    <div>
-                      <button type="submit" className="btn btn-primary">Submit</button>
-                    </div>
-                    <div>
-                      <span className='align-middle' style={{cursor: 'pointer'}} onClick={this.changeForm}>
-                        Iniciar Sesión
-                      </span>
-                    </div>
+                <div className="d-flex justify-content-around">
+                  <div>
+                    <button type="submit" className="btn btn-primary">
+                      Submit
+                    </button>
                   </div>
+                  <div>
+                    <span
+                      className="align-middle"
+                      style={{ cursor: 'pointer' }}
+                      onClick={this.changeForm}
+                    >
+                      Iniciar Sesión
+                    </span>
+                  </div>
+                </div>
               </form>
             </div>
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 
 const mapDispatchToProps = dispatch => {
-  const {
-    createAccount,
-    toggleLogInForm
-  } = appActions;
-  return bindActionCreators({
-    createAccount,
-    toggleLogInForm
-  }, dispatch);
-}
+  const { createAccount, toggleLogInForm } = appActions;
+  return bindActionCreators(
+    {
+      createAccount,
+      toggleLogInForm
+    },
+    dispatch
+  );
+};
 
-export default connect(null, mapDispatchToProps)(Register);
+export default connect(
+  null,
+  mapDispatchToProps
+)(Register);

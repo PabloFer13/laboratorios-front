@@ -55,8 +55,16 @@ export function* autoLoginSaga() {
   }
 }
 
+export function* logOutSaga() {
+  yield call([localStorage, 'removeItem'], 'labsFront');
+  yield put(app.setToken(''));
+  yield put(app.setStatus(false));
+  yield put(push('/'));
+}
+
 export default function* appSaga() {
   yield takeLatest(app.logIn.type, logInSaga);
   yield takeLatest(app.createAccount.type, createSaga);
   yield takeLatest(app.autoLogin.type, autoLoginSaga);
+  yield takeLatest(app.logOut.type, logOutSaga);
 }

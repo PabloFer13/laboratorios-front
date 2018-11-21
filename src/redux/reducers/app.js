@@ -4,10 +4,10 @@ const initialState = {
   status: false,
   newUser: false,
   token: ''
-}
+};
 
-export default function(state = initialState, { type, payload }){
-  switch(type){
+export default function(state = initialState, { type, payload }) {
+  switch (type) {
     case app.toggleLogInForm.type:
       return { ...state, newUser: payload };
     case app.setStatus.type:

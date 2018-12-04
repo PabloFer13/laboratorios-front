@@ -6,10 +6,25 @@ import api from '../../services/api';
 export function* logInSaga({ payload }) {
   try {
     const {
-      data: { token, user }
-    } = yield call(api.login, payload);
+      data: {
+        login: { first_name: name, last_name: lastName, id, userType, token }
+      }
+    } = yield call(api.session.login, payload);
 
-    yield call(api.auth, token);
+    const user = {
+      name,
+      lastName,
+      id,
+      userType
+    };
+
+    // console.log(userObj);
+
+    /* const {
+      data: { token, user }
+    } = yield call(api.login, payload); */
+
+    // yield call(api.auth, token);
     yield put(app.setToken(token));
     yield put(userActions.setUser(user));
 

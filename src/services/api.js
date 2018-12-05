@@ -125,9 +125,14 @@ export default {
             status {
               status
             }
+            dia
           }
         }
       `;
+      return client.query({
+        query: managerRequestsQry,
+        variables: params
+      });
     }
   },
   session: {

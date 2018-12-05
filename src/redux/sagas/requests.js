@@ -13,7 +13,7 @@ export function* userRequestsSaga() {
 export function* managerRequestsSaga() {
   const { id: userId } = yield select(({ user }) => user);
   const {
-    data: { user_Requests: reqs }
+    data: { encargado_Requests: reqs }
   } = yield call(api.requests.getManagerRequests, { userId });
   yield put(requestsActions.setRequests(reqs));
 }

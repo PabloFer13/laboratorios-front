@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { semesterActions, formActions } from '../../redux/actions';
+import { semesterActions, formActions, appActions } from '../../redux/actions';
 
 class CreateRequestModal extends Component {
   constructor(props) {
@@ -16,6 +16,7 @@ class CreateRequestModal extends Component {
       horaFinal: ''
     };
     this.handleInput = this.handleInput.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleInput(e) {
@@ -27,6 +28,12 @@ class CreateRequestModal extends Component {
     }
   }
 
+  handleSubmit(e) {
+    e.preventDefault();
+    const { generateRequest, fechaInicio, fechaFinal } = this.props;
+    generateRequest({ ...this.state, fechaInicio, fechaFinal });
+  }
+
   render() {
     const {
       show,
@@ -36,7 +43,9 @@ class CreateRequestModal extends Component {
       materias,
       fechaInicio,
       fechaFinal,
-      tipoUsuario
+      tipoUsuario,
+      changeFechaInicio,
+      changeFechaFinal
     } = this.props;
     const {
       profesor,
@@ -54,7 +63,7 @@ class CreateRequestModal extends Component {
             <div className="modal-header">
               <h5 className="modal-title">Reserva</h5>
             </div>
-            <form>
+            <form onSubmit={this.handleSubmit}>
               <div className="modal-body">
                 <div className="form-row">
                   <div className="col">
@@ -162,7 +171,7 @@ class CreateRequestModal extends Component {
                           value={fechaInicio}
                           name="fechaInicio"
                           disabled={tipo !== '3'}
-                          onChange={this.handleInput}
+                          onChange={changeFechaInicio}
                         />
                       </div>
                       <div className="col-6">
@@ -203,7 +212,7 @@ class CreateRequestModal extends Component {
                           value={fechaFinal}
                           name="fechaFinal"
                           disabled={tipo !== '3'}
-                          onChange={this.handleInput}
+                          onChange={changeFechaFinal}
                         />
                       </div>
                       <div className="col-6">
@@ -274,9 +283,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   const { getSemester } = semesterActions;
+  const { generateRequest } = appActions;
   const { changeFechaFinal, changeFechaInicio } = formActions;
   return bindActionCreators(
-    { getSemester, changeFechaFinal, changeFechaInicio },
+    { getSemester, changeFechaFinal, changeFechaInicio, generateRequest },
     dispatch
   );
 };

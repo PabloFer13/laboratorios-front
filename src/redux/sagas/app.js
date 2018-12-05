@@ -77,9 +77,38 @@ export function* logOutSaga() {
   yield put(push('/'));
 }
 
+export function* generateRequestSaga({ payload }) {
+  const {
+    profesor,
+    materia,
+    laboratorio,
+    tipo,
+    dia,
+    horaInicio,
+    horaFinal,
+    fechaInicio,
+    fechaFinal
+  } = payload;
+
+  const { id } = yield select(({ user }) => user.id);
+  const params = {
+    userId: Number(id),
+    teacherId: Number(profesor),
+    subjectId: Number(materia),
+    requestTypeId: Number(tipo),
+    laboratoryId: Number(laboratorio),
+    startTime: fechaInicio,
+    endTime: fechaFinal,
+    startDate: fechaInicio,
+    endDate: fechaFinal,
+    dia
+  };
+}
+
 export default function* appSaga() {
   yield takeLatest(app.logIn.type, logInSaga);
   yield takeLatest(app.createAccount.type, createSaga);
   yield takeLatest(app.autoLogin.type, autoLoginSaga);
   yield takeLatest(app.logOut.type, logOutSaga);
+  yield takeLatest(app.generateRequest.type, generateRequestSaga);
 }

@@ -10,7 +10,8 @@ const types = [
   'GO_TO',
   'LOG_OUT',
   'SET_TOKEN',
-  'AUTO_LOGIN'
+  'AUTO_LOGIN',
+  'GENERATE_REQUEST'
 ];
 
 export const {
@@ -21,7 +22,8 @@ export const {
   goTo,
   logOut,
   setToken,
-  autoLogin
+  autoLogin,
+  generateRequest
 } = createActions(prefix, types);
 
 export default {
@@ -32,5 +34,6 @@ export default {
   goTo,
   logOut,
   setToken,
-  autoLogin
+  autoLogin,
+  generateRequest
 };

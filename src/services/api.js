@@ -23,7 +23,8 @@ export default {
       const createRequestQry = gql`
         mutation request(
           $userId: ID!
-          $subjectSemesterId: ID!
+          $subjectId: ID!
+          $teacherId: ID!
           $requestTypeId: ID!
           $laboratoryId: ID!
           $startTime: String!
@@ -34,7 +35,8 @@ export default {
         ) {
           create_request(
             userId: $userId
-            subjectSemesterId: $subjectSemesterId
+            teacherId: $teacherId
+            subjectId: $subjectId
             requestTypeId: $requestTypeId
             laboratoryId: $laboratoryId
             startTime: $startTime

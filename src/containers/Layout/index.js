@@ -40,22 +40,10 @@ class Layout extends Component {
   renderUserLinks() {
     const { userType = 'admin' } = this.props;
     const userLinks = [];
-    if (userType === 'encargado' || userType === 'admin') {
+    if (userType === 'Encargado' || userType === 'Administrador') {
       links.encargado.reduce((acc, item) => {
         acc.push(
           <li className="nav-item" key={`encargado-link-${item.url}`}>
-            <Link className="nav-link" to={item.url}>
-              <LinkSpan>{item.display}</LinkSpan>
-            </Link>
-          </li>
-        );
-        return acc;
-      }, userLinks);
-    }
-    if (userType === 'admin') {
-      links.admin.reduce((acc, item) => {
-        acc.push(
-          <li className="nav-item" key={`admin-link-${item.url}`}>
             <Link className="nav-link" to={item.url}>
               <LinkSpan>{item.display}</LinkSpan>
             </Link>
@@ -92,6 +80,7 @@ class Layout extends Component {
             id="navbarSupportedContent"
           >
             <ul className="navbar-nav">
+              {this.renderUserLinks()}
               <li className="nav-item">
                 <Link className="nav-link" to="/reservas">
                   Reservas
@@ -124,10 +113,10 @@ class Layout extends Component {
 const mapStateToProps = state => {
   const {
     user: {
-      tipo: { name }
+      userType: { type }
     }
   } = state;
-  return { userType: name };
+  return { userType: type };
 };
 
 const mapDispatchToProps = dispatch => {

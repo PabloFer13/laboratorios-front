@@ -6,10 +6,25 @@ import api from '../../services/api';
 export function* logInSaga({ payload }) {
   try {
     const {
-      data: { token, user }
-    } = yield call(api.login, payload);
+      data: {
+        login: { first_name: name, last_name: lastName, id, userType, token }
+      }
+    } = yield call(api.session.login, payload);
 
-    yield call(api.auth, token);
+    const user = {
+      name,
+      lastName,
+      id,
+      userType
+    };
+
+    // console.log(userObj);
+
+    /* const {
+      data: { token, user }
+    } = yield call(api.login, payload); */
+
+    // yield call(api.auth, token);
     yield put(app.setToken(token));
     yield put(userActions.setUser(user));
 
@@ -62,9 +77,46 @@ export function* logOutSaga() {
   yield put(push('/'));
 }
 
+export function* generateRequestSaga({ payload }) {
+  const {
+    profesor,
+    materia,
+    laboratorio,
+    tipo,
+    dia,
+    horaInicio,
+    horaFinal,
+    fechaInicio,
+    fechaFinal
+  } = payload;
+
+  const { id } = yield select(({ user }) => user);
+
+  const params = {
+    userId: Number(id),
+    teacherId: Number(profesor),
+    subjectId: Number(materia),
+    requestTypeId: Number(tipo),
+    laboratoryId: Number(laboratorio),
+    startTime: horaInicio,
+    endTime: horaFinal,
+    startDate: fechaInicio,
+    endDate: fechaFinal,
+    dia
+  };
+  try {
+    yield call(api.requests.create, params);
+    alert('Solicitud enviada, puede cerrar el formulario');
+  } catch (err) {
+    console.log(err);
+    alert('Hubo un error intente mas tarde');
+  }
+}
+
 export default function* appSaga() {
   yield takeLatest(app.logIn.type, logInSaga);
   yield takeLatest(app.createAccount.type, createSaga);
   yield takeLatest(app.autoLogin.type, autoLoginSaga);
   yield takeLatest(app.logOut.type, logOutSaga);
+  yield takeLatest(app.generateRequest.type, generateRequestSaga);
 }

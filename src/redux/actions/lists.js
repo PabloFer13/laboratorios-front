@@ -11,6 +11,7 @@ const types = [
   'GET_RESERVAS',
   'GET_SOLICITUDES',
   'GET_HORARIOS',
+  'GET_MAESTROS',
   'SET_USERS',
   'SET_LABS',
   'SET_MATERIAS',
@@ -18,7 +19,8 @@ const types = [
   'SET_NOTIFICACIONES',
   'SET_RESERVAS',
   'SET_SOLICITUDES',
-  'SET_HORARIOS'
+  'SET_HORARIOS',
+  'SET_MAESTROS'
 ];
 
 export const {
@@ -30,6 +32,7 @@ export const {
   getReservas,
   getSolicitudes,
   getHorarios,
+  getMaestros,
   setUsers,
   setLabs,
   setMaterias,
@@ -37,7 +40,8 @@ export const {
   setNotificaciones,
   setReservas,
   setSolicitudes,
-  setHorarios
+  setHorarios,
+  setMaestros
 } = createActions(prefix, types);
 
 export default {
@@ -49,6 +53,7 @@ export default {
   getReservas,
   getSolicitudes,
   getHorarios,
+  getMaestros,
   setUsers,
   setLabs,
   setMaterias,
@@ -56,5 +61,6 @@ export default {
   setNotificaciones,
   setReservas,
   setSolicitudes,
-  setHorarios
+  setHorarios,
+  setMaestros
 };

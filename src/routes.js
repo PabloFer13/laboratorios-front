@@ -5,12 +5,15 @@ import Home from './containers/Home';
 import Usuarios from './containers/Usuarios';
 import Reservas from './containers/Reservas';
 import Perfil from './containers/Perfil';
+import Solicitudes from './containers/Solicitudes';
+
 
 const Routes = ({ location }) => (
   <Switch location={location}>
     <Route exact path="/usuarios" component={Usuarios} />
     <Route exact path="/reservas" component={Reservas} />
     <Route exact path="/perfil" component={Perfil} />
+    <Route exact path="/solicitudes" component={Solicitudes} />
     <Route exact path="/" component={Home} />
     <Redirect to="/" />
   </Switch>

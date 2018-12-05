@@ -7,7 +7,7 @@ import {
   FilterWrapper,
   TableWrapper,
   FooterWrapper
-} from './Reservas.styled';
+} from './Solicitudes.styled';
 import CreateRequestModal from '../CreateRequestModal';
 import { requestsActions } from '../../redux/actions';
 
@@ -32,11 +32,12 @@ class Reservas extends Component {
     };
     this.toggleModal = this.toggleModal.bind(this);
     this.seeReservationDetails = this.seeReservationDetails.bind(this);
+    this.renderButtons = this.renderButtons.bind(this);
   }
 
   componentDidMount() {
-    const { getUserRequests } = this.props;
-    getUserRequests();
+    const { getManagerRequests } = this.props;
+    getManagerRequests();
   }
 
   toggleModal() {
@@ -52,6 +53,17 @@ class Reservas extends Component {
     fetchReservation(id);
   }
 
+  renderButtons(requestId) {
+    return [
+      <button key={`accept-${requestId}`} className="btn btn-success">
+        Aceptar
+      </button>,
+      <button key={`reject-${requestId}`} className="btn btn-danger">
+        Rechazar
+      </button>
+    ];
+  }
+
   render() {
     const { showModal } = this.state;
     const { requests } = this.props;
@@ -63,30 +75,38 @@ class Reservas extends Component {
               <thead>
                 <tr>
                   <th scope="col">Laboratorio</th>
+                  <th scope="col">Materia</th>
                   <th scope="col">Dia</th>
-                  <th scope="col">Fecha</th>
                   <th scope="col">Hora</th>
                   <th scope="col">Estado</th>
-                  <th scope="col">
-                    <button
-                      type="button"
-                      className="btn btn-success"
-                      onClick={this.toggleModal}
-                    >
-                      Crear Reserva
-                    </button>
-                  </th>
+                  <th scope="col" />
                 </tr>
               </thead>
               <tbody>
                 {requests.map(item => (
                   <tr key={`solicitud-${item.id}`}>
                     <td>{item.laboratory_id.name}</td>
-                    <td>{dias[item.dia]}</td>
-                    <td>{`${item.start_date} - ${item.end_date}`}</td>
-                    <td>{`${item.start_time} - ${item.end_time}`}</td>
+                    <td>
+                      <p>{item.subjectSemester_id.subject.name}</p>
+                      <p>{`${item.subjectSemester_id.teacher.first_name} ${
+                        item.subjectSemester_id.teacher.last_name
+                      }`}</p>
+                    </td>
+                    <td>
+                      <p>{dias[item.dia]}</p>
+                      <p>{`De: ${item.start_date}`}</p>
+                      <p>{`Al: ${item.end_date}`}</p>
+                    </td>
+                    <td>
+                      <p>{`De: ${item.start_time}`}</p>
+                      <p>{`A: ${item.end_time}`}</p>
+                    </td>
                     <td>{item.status.status}</td>
-                    <td>Ver Mas...</td>
+                    <td>
+                      {item.status.status === 'Pendiente'
+                        ? this.renderButtons(item.id)
+                        : null}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -110,8 +130,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  const { getUserRequests } = requestsActions;
-  return bindActionCreators({ getUserRequests }, dispatch);
+  const { getManagerRequests } = requestsActions;
+  return bindActionCreators({ getManagerRequests }, dispatch);
 };
 
 export default connect(

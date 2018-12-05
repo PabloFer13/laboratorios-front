@@ -8,7 +8,8 @@ const initialState = {
   notificaciones: [],
   reservas: [],
   solicitudes: [],
-  horarios: []
+  horarios: [],
+  maestros: []
 };
 
 export default function(state = initialState, { type, payload }) {
@@ -29,6 +30,8 @@ export default function(state = initialState, { type, payload }) {
       return { ...state, solicitudes: [...payload] };
     case lists.setHorarios.type:
       return { ...state, horarios: [...payload] };
+    case lists.setMaestros.type:
+      return { ...state, maestros: [...payload] };
     default:
       return state;
   }

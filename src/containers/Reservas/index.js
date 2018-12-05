@@ -6,7 +6,7 @@ import {
   TableWrapper,
   FooterWrapper
 } from './Reservas.styled';
-import ModalReserva from '../DetailModal';
+import CreateRequestModal from '../CreateRequestModal';
 
 const Portal = ({ children }) =>
   createPortal(children, document.getElementById('root'));
@@ -15,12 +15,27 @@ class Reservas extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showModal: false,
-      create: false
+      showModal: false
     };
+    this.toggleModal = this.toggleModal.bind(this);
+    this.seeReservationDetails = this.seeReservationDetails.bind(this);
+  }
+
+  toggleModal() {
+    this.setState(({ showModal }) => ({
+      showModal: !showModal,
+      modalVersion: 'create'
+    }));
+  }
+
+  seeReservationDetails(id) {
+    this.setState(() => ({ modalVersion: 'see' }));
+    const { fetchReservation } = this.props;
+    fetchReservation(id);
   }
 
   render() {
+    const { showModal } = this.state;
     return (
       <Fragment>
         <MainRow className="row">
@@ -34,7 +49,11 @@ class Reservas extends Component {
                   <th scope="col">Hora</th>
                   <th scope="col">Estado</th>
                   <th scope="col">
-                    <button type="button" className="btn btn-success">
+                    <button
+                      type="button"
+                      className="btn btn-success"
+                      onClick={this.toggleModal}
+                    >
                       Crear Reserva
                     </button>
                   </th>
@@ -78,7 +97,10 @@ class Reservas extends Component {
           </TableWrapper>
         </MainRow>
         <Portal>
-          <ModalReserva />
+          <CreateRequestModal
+            show={showModal}
+            closeFunction={this.toggleModal}
+          />
         </Portal>
       </Fragment>
     );

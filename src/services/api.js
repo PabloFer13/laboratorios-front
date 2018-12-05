@@ -18,6 +18,42 @@ export default {
   reservations: {
     get: params => axios.get('/reservations', params)
   },
+  requests: {
+    create: async params => {
+      const createRequestQry = gql`
+        mutation request(
+          $userId: ID!
+          $subjectSemesterId: ID!
+          $requestTypeId: ID!
+          $laboratoryId: ID!
+          $startTime: String!
+          $endTime: String!
+          $startDate: String
+          $endDate: String
+          $dia: daysScalar!
+        ) {
+          create_request(
+            userId: $userId
+            subjectSemesterId: $subjectSemesterId
+            requestTypeId: $requestTypeId
+            laboratoryId: $laboratoryId
+            startTime: $startTime
+            endTime: $endTime
+            startDate: $startDate
+            endDate: $endDate
+            dia: $dia
+          ) {
+            id
+          }
+        }
+      `;
+
+      return client.query({
+        query: createRequestQry,
+        variables: params
+      });
+    }
+  },
   session: {
     login: async params => {
       const loginQuery = gql`
@@ -39,6 +75,20 @@ export default {
         query: loginQuery,
         variables: params
       });
+    }
+  },
+  semester: {
+    getActive: async () => {
+      const activeSemesterQry = gql`
+        query {
+          get_active_Semester {
+            start_date
+            end_date
+          }
+        }
+      `;
+
+      return client.query({ query: activeSemesterQry });
     }
   }
 };

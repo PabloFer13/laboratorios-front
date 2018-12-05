@@ -87,6 +87,9 @@ export default {
             end_time
             dia
             description
+            status {
+              status
+            }
           }
         }
       `;
@@ -119,6 +122,9 @@ export default {
             start_time
             end_time
             description
+            status {
+              status
+            }
           }
         }
       `;

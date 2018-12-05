@@ -98,8 +98,8 @@ export function* generateRequestSaga({ payload }) {
     subjectId: Number(materia),
     requestTypeId: Number(tipo),
     laboratoryId: Number(laboratorio),
-    startTime: fechaInicio,
-    endTime: fechaFinal,
+    startTime: horaInicio,
+    endTime: horaFinal,
     startDate: fechaInicio,
     endDate: fechaFinal,
     dia

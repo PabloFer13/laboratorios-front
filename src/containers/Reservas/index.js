@@ -1,4 +1,6 @@
 import React, { Component, Fragment } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import { createPortal } from 'react-dom';
 import {
   MainRow,
@@ -7,9 +9,20 @@ import {
   FooterWrapper
 } from './Reservas.styled';
 import CreateRequestModal from '../CreateRequestModal';
+import { requestsActions } from '../../redux/actions';
 
 const Portal = ({ children }) =>
   createPortal(children, document.getElementById('root'));
+
+const dias = [
+  'Domingo',
+  'Lunes',
+  'Martes',
+  'Miercoles',
+  'Jueves',
+  'Viernes',
+  'Sabado'
+];
 
 class Reservas extends Component {
   constructor(props) {
@@ -19,6 +32,11 @@ class Reservas extends Component {
     };
     this.toggleModal = this.toggleModal.bind(this);
     this.seeReservationDetails = this.seeReservationDetails.bind(this);
+  }
+
+  componentDidMount() {
+    const { getUserRequests } = this.props;
+    getUserRequests();
   }
 
   toggleModal() {
@@ -36,6 +54,7 @@ class Reservas extends Component {
 
   render() {
     const { showModal } = this.state;
+    const { requests } = this.props;
     return (
       <Fragment>
         <MainRow className="row">
@@ -60,38 +79,16 @@ class Reservas extends Component {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>Telematica</td>
-                  <td>Lunes</td>
-                  <td>15/Agosto/2018 - 01/Diciembre/2018</td>
-                  <td>13:00 - 14:00</td>
-                  <td>Aceptada</td>
-                  <td>Ver Mas</td>
-                </tr>
-                <tr>
-                  <td>Telematica</td>
-                  <td>Miercoles</td>
-                  <td>15/Agosto/2018 - 01/Diciembre/2018</td>
-                  <td>13:00 - 15:00</td>
-                  <td>Rechazada</td>
-                  <td>Ver Mas</td>
-                </tr>
-                <tr>
-                  <td>Multimedia</td>
-                  <td>Martes</td>
-                  <td>15/Agosto/2018 - 01/Diciembre/2018</td>
-                  <td>20:00 - 22:00</td>
-                  <td>Aceptada</td>
-                  <td>Ver Mas</td>
-                </tr>
-                <tr>
-                  <td>Multimedia</td>
-                  <td>Viernes</td>
-                  <td>15/Agosto/2018 - 01/Diciembre/2018</td>
-                  <td>10:00 - 12:00</td>
-                  <td>Pendiente</td>
-                  <td>Ver Mas</td>
-                </tr>
+                {requests.map(item => (
+                  <tr key={`solicitud-${item.id}`}>
+                    <td>{item.laboratory_id.name}</td>
+                    <td>{dias[item.dia]}</td>
+                    <td>{`${item.start_date} - ${item.end_date}`}</td>
+                    <td>{`${item.start_time} - ${item.end_time}`}</td>
+                    <td>{item.status.status}</td>
+                    <td>Ver Mas...</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </TableWrapper>
@@ -107,4 +104,17 @@ class Reservas extends Component {
   }
 }
 
-export default Reservas;
+const mapStateToProps = state => {
+  const { requests } = state;
+  return { requests };
+};
+
+const mapDispatchToProps = dispatch => {
+  const { getUserRequests } = requestsActions;
+  return bindActionCreators({ getUserRequests }, dispatch);
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Reservas);

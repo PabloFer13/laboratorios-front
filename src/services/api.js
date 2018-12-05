@@ -68,6 +68,60 @@ export default {
         mutation: createRequestQry,
         variables: params
       });
+    },
+    getUserRequests: async params => {
+      const userRequestsQry = gql`
+        query userReqs($userId: ID!) {
+          user_Requests(userId: $userId) {
+            id
+            requestType_id {
+              type
+            }
+            laboratory_id {
+              name
+              short_name
+            }
+            start_date
+            end_date
+            start_time
+            end_time
+            dia
+            description
+          }
+        }
+      `;
+      return client.query({
+        query: userRequestsQry,
+        variables: params
+      });
+    },
+    getManagerRequests: async params => {
+      const managerRequestsQry = gql`
+        query userReqs($userId: ID!) {
+          encargado_Requests(userId: $userId) {
+            id
+            subjectSemester_id {
+              teacher {
+                id
+                first_name
+                last_name
+              }
+              subject {
+                name
+              }
+            }
+            laboratory_id {
+              name
+              short_name
+            }
+            start_date
+            end_date
+            start_time
+            end_time
+            description
+          }
+        }
+      `;
     }
   },
   session: {

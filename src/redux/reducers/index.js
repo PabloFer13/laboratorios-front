@@ -6,6 +6,7 @@ import reservation from './reservation';
 import reservations from './reservations';
 import semester from './semester';
 import form from './form';
+import requests from './requests';
 
 export default combineReducers({
   app,
@@ -14,5 +15,6 @@ export default combineReducers({
   reservation,
   reservations,
   semester,
-  form
+  form,
+  requests
 });

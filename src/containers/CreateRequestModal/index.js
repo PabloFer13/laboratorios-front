@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { semesterActions, formActions, appActions } from '../../redux/actions';
+import {
+  semesterActions,
+  formActions,
+  appActions,
+  listsActions
+} from '../../redux/actions';
 
 class CreateRequestModal extends Component {
   constructor(props) {
@@ -19,12 +24,23 @@ class CreateRequestModal extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentDidMount() {
+    const { getMaterias, getLabs } = this.props;
+    getMaterias();
+    getLabs();
+  }
+
   handleInput(e) {
     const { name, value } = e.target;
     this.setState({ [name]: value });
     if (name === 'tipo' && value !== '3') {
       const { getSemester } = this.props;
       getSemester();
+    }
+    if (name === 'materia' && value !== '0' && value !== 0) {
+      const { getMaestros } = this.props;
+      getMaestros(value);
+      this.setState({ profesor: 0 });
     }
   }
 
@@ -75,9 +91,10 @@ class CreateRequestModal extends Component {
                         name="materia"
                         onChange={this.handleInput}
                       >
+                        <option value="0">Seleccione...</option>
                         {materias.map(item => (
-                          <option key={item.id} value={item.id}>
-                            {item.name}
+                          <option key={`materias-${item.id}`} value={item.id}>
+                            {item.subject.name}
                           </option>
                         ))}
                       </select>
@@ -92,9 +109,19 @@ class CreateRequestModal extends Component {
                         name="profesor"
                         onChange={this.handleInput}
                       >
+                        <option value="0">
+                          {materia === 0 || materia === '0'
+                            ? 'Seleccione primero una materia'
+                            : 'Seleccione Profesor'}
+                        </option>
                         {profesores.map(item => (
-                          <option key={item.id} value={item.id}>
-                            {`${item.first_name} ${item.last_name}`}
+                          <option
+                            key={`profesores-${item.teacher.id}`}
+                            value={item.teacher.id}
+                          >
+                            {`${item.teacher.first_name} ${
+                              item.teacher.last_name
+                            }`}
                           </option>
                         ))}
                       </select>
@@ -111,6 +138,7 @@ class CreateRequestModal extends Component {
                         name="laboratorio"
                         onChange={this.handleInput}
                       >
+                        <option value="0">Seleccione...</option>
                         {laboratorios.map(item => (
                           <option key={item.id} value={item.id}>
                             {`${item.short_name} - ${item.name}`}
@@ -182,6 +210,7 @@ class CreateRequestModal extends Component {
                           name="horaInicio"
                           onChange={this.handleInput}
                         >
+                          <option value="0">Seleccione</option>
                           <option value="7:00">7:00</option>
                           <option value="8:00">8:00</option>
                           <option value="9:00">9:00</option>
@@ -223,6 +252,7 @@ class CreateRequestModal extends Component {
                           name="horaFinal"
                           onChange={this.handleInput}
                         >
+                          <option value="0">Seleccione</option>
                           <option value="7:00">7:00</option>
                           <option value="8:00">8:00</option>
                           <option value="9:00">9:00</option>
@@ -285,8 +315,17 @@ const mapDispatchToProps = dispatch => {
   const { getSemester } = semesterActions;
   const { generateRequest } = appActions;
   const { changeFechaFinal, changeFechaInicio } = formActions;
+  const { getMaterias, getMaestros, getLabs } = listsActions;
   return bindActionCreators(
-    { getSemester, changeFechaFinal, changeFechaInicio, generateRequest },
+    {
+      getSemester,
+      changeFechaFinal,
+      changeFechaInicio,
+      generateRequest,
+      getMaterias,
+      getMaestros,
+      getLabs
+    },
     dispatch
   );
 };

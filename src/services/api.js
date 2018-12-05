@@ -18,6 +18,20 @@ export default {
   reservations: {
     get: params => axios.get('/reservations', params)
   },
+  labs: {
+    get: async () => {
+      const getLabsQry = gql`
+        query {
+          get_labs {
+            id
+            name
+            short_name
+          }
+        }
+      `;
+      return client.query({ query: getLabsQry });
+    }
+  },
   requests: {
     create: async params => {
       const createRequestQry = gql`
@@ -50,8 +64,8 @@ export default {
         }
       `;
 
-      return client.query({
-        query: createRequestQry,
+      return client.mutate({
+        mutation: createRequestQry,
         variables: params
       });
     }
@@ -91,6 +105,39 @@ export default {
       `;
 
       return client.query({ query: activeSemesterQry });
+    }
+  },
+  subjects: {
+    get: async () => {
+      const activeSubjectsQry = gql`
+        query {
+          get_active_Subjects {
+            id
+            subject {
+              name
+            }
+          }
+        }
+      `;
+
+      return client.query({ query: activeSubjectsQry });
+    },
+    getTeachers: async params => {
+      const subjectTeachersQry = gql`
+        query subjectTeachers($subjectId: ID!) {
+          get_Subject_Teachers(subjectId: $subjectId) {
+            teacher {
+              id
+              first_name
+              last_name
+            }
+          }
+        }
+      `;
+      return client.query({
+        query: subjectTeachersQry,
+        variables: params
+      });
     }
   }
 };

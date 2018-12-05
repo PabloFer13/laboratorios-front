@@ -6,12 +6,12 @@ import api from '../../services/api';
 export function* getSaga() {
   const {
     data: {
-      get_active_Semester: { start_date: startDate, end_date: endDate }
+      get_active_Semester: { start_date: rawStartDate, end_date: rawEndDate }
     }
   } = yield call(api.semester.getActive);
 
-  // const startDate = moment(rawStartDate, 'YYYY-MM-DD').format('DD/MM/YYYY');
-  // const endDate = moment(rawEndDate, 'YYYY-MM-DD').format('DD/MM/YYYY');
+  const startDate = moment(rawStartDate, 'DD/MM/YYYY').format('YYYY-MM-DD');
+  const endDate = moment(rawEndDate, 'DD/MM/YYYY').format('YYYY-MM-DD');
 
   yield put(semesterActions.setSemester({ startDate, endDate }));
   yield put(formActions.setFechaInicio(startDate));

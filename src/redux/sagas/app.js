@@ -90,7 +90,8 @@ export function* generateRequestSaga({ payload }) {
     fechaFinal
   } = payload;
 
-  const { id } = yield select(({ user }) => user.id);
+  const { id } = yield select(({ user }) => user);
+
   const params = {
     userId: Number(id),
     teacherId: Number(profesor),
@@ -103,6 +104,13 @@ export function* generateRequestSaga({ payload }) {
     endDate: fechaFinal,
     dia
   };
+  try {
+    yield call(api.requests.create, params);
+    alert('Solicitud enviada, puede cerrar el formulario');
+  } catch (err) {
+    console.log(err);
+    alert('Hubo un error intente mas tarde');
+  }
 }
 
 export default function* appSaga() {

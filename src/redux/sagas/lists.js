@@ -1,67 +1,32 @@
 import { takeLatest, put, select, call } from 'redux-saga/effects';
-import { push } from 'connected-react-router';
 import { listsActions } from '../actions';
 import api from '../../services/api';
 
-export function* logInSaga({ payload }) {
-  try {
-    const {
-      data: { token, user }
-    } = yield call(api.login, payload);
+export function* getMateriasSaga() {
+  const {
+    data: { get_active_Subjects: materias }
+  } = yield call(api.subjects.get);
 
-    yield call(api.auth, token);
-    yield put(app.setToken(token));
-    yield put(userActions.setUser(user));
-
-    const cookie = { user, token };
-    const cookieString = JSON.stringify(cookie);
-
-    yield call([localStorage, 'setItem'], 'labsFront', cookieString);
-    yield put(app.setStatus(true));
-  } catch (err) {
-    console.log(err);
-  }
+  yield put(listsActions.setMaterias(materias));
 }
 
-export function* createSaga({ payload }) {
-  try {
-    const {
-      data: { token, user: userData }
-    } = yield call(api.users.create, payload);
-    yield call(api.auth, token);
-    yield put(app.setToken(token));
-    yield put(userActions.setUser(userData));
-    yield put(app.setStatus(true));
-  } catch (err) {
-    console.log(err);
-  }
+export function* getMaestrosSaga({ payload }) {
+  const {
+    data: { get_Subject_Teachers: maestros }
+  } = yield call(api.subjects.getTeachers, { subjectId: Number(payload) });
+
+  yield put(listsActions.setMaestros(maestros));
 }
 
-export function* autoLoginSaga() {
-  try {
-    const cookieString = yield call([localStorage, 'getItem'], 'labsFront');
-    const cookie = cookieString ? JSON.parse(cookieString) : false;
-    if (cookie) {
-      const { user, token } = cookie;
-      yield put(userActions.setUser(user));
-      yield call(api.auth, token);
-      yield put(app.setToken(token));
-      yield put(app.setStatus(true));
-    }
-  } catch (err) {
-    //  TODO: handle some error
-    console.log(err);
-    alert('Se detecto un error al iniciar sesión automaticamente.');
-  }
+export function* getLabsSaga() {
+  const {
+    data: { get_labs: labs }
+  } = yield call(api.labs.get);
+  yield put(listsActions.setLabs(labs));
 }
 
-export function* logOutSaga() {
-  yield call([localStorage, 'removeItem'], 'labsFront');
-  yield put(app.setToken(''));
-  yield put(app.setStatus(false));
-  yield put(push('/'));
-}
-
-export default function* appSaga() {
-  yield takeLatest(listsActions.getReservas.type, getReservasSagas);
+export default function* listsSaga() {
+  yield takeLatest(listsActions.getMaterias.type, getMateriasSaga);
+  yield takeLatest(listsActions.getMaestros.type, getMaestrosSaga);
+  yield takeLatest(listsActions.getLabs.type, getLabsSaga);
 }
